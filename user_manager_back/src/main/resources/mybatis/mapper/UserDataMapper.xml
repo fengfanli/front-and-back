@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.feng.user_manager.mapper.UserDataMapper">
+
+    <select id="queryUserDataList" parameterType="com.feng.user_manager.vo.req.UserDataReq" resultType="com.feng.user_manager.vo.resp.UserDataResp">
+        select *
+        from user_info
+        where 1=1
+        <if test="startBirth != '' and startBirth != null">
+            and birthday &gt;= #{startBirth}
+        </if>
+        <if test="endBirth != '' and endBirth != null">
+            and birthday &lt;= #{endBirth}
+        </if>
+        <if test="startRoad != '' and startRoad != null">
+            and total_travel_road &gt;= #{startRoad}
+        </if>
+        <if test="endRoad != '' and endRoad != null">
+            and total_travel_road &lt;= #{endRoad}
+        </if>
+        <if test="startTime != '' and startTime != null">
+            and total_travel_time &gt;= #{startTime}
+        </if>
+        <if test="endTime != '' and endTime != null">
+            and total_travel_time &lt;= #{endTime}
+        </if>
+        order by id asc
+        limit #{pageNum}, #{pageSize}
+    </select>
+
+    <select id="queryUserDataListTest"  resultType="com.feng.user_manager.vo.resp.UserDataResp">
+        select *
+        from user_info
+        limit 10
+    </select>
+
+    <select id="getAllUserDataCount" parameterType="com.feng.user_manager.vo.req.UserDataReq" resultType="java.lang.Integer">
+        select count(*)
+        from user_info
+        where 1=1
+        <if test="startBirth != '' and startBirth != null">
+            and birthday &gt;= #{startBirth}
+        </if>
+        <if test="endBirth != '' and endBirth != null">
+            and birthday &lt;= #{endBirth}
+        </if>
+        <if test="startRoad != '' and startRoad != null">
+            and total_travel_road &gt;= #{startRoad}
+        </if>
+        <if test="endRoad != '' and endRoad != null">
+            and total_travel_road &lt;= #{endRoad}
+        </if>
+        <if test="startTime != '' and startTime != null">
+            and total_travel_time &gt;= #{startTime}
+        </if>
+        <if test="endTime != '' and endTime != null">
+            and total_travel_time &lt;= #{endTime}
+        </if>
+    </select>
+
+    <select id="getBirthday" resultType="java.lang.Integer">
+        select distinct birthday
+        from user_info
+        order by birthday asc
+    </select>
+
+    <select id="queryUserDataById" parameterType="java.lang.Integer" resultType="com.feng.user_manager.vo.resp.UserDataResp">
+        select *
+        from feng.user_data
+        where user_id = #{id};
+    </select>
+
+    <select id="queryUserDataByName" parameterType="java.lang.String" resultType="com.feng.user_manager.vo.resp.UserDataResp">
+        select *
+        from feng.user_data
+        where user_name = #{name};
+    </select>
+
+    <insert id="addUserData" parameterType="com.feng.user_manager.vo.req.UserDataReq">
+        insert into
+        feng.user_data(user_name, gender, birthday, total_travel_road, total_travel_time)
+        values(#{user_name}, #{gender}, #{birthday}, #{total_travel_road}, #{total_travel_time});
+    </insert>
+
+    <update id="updateUser" parameterType="com.feng.user_manager.vo.req.UserDataUpdateReq">
+        update feng.user_data
+        set
+        user_name=#{user_name}
+        ,gender=#{gender}
+        ,birthday=#{birthday}
+        ,total_traval_road=#{total_traval_road}
+        ,total_traval_time=#{total_traval_time}
+        where user_id = #{user_id};
+    </update>
+
+    <delete id="deleteUser" parameterType="java.lang.Integer">
+        delete from feng.user_data
+        where user_id = #{id};
+    </delete>
+
+<!--    性别-->
+    <select id="getGenderBarChart" parameterType="com.feng.user_manager.vo.req.UserDataReq" resultType="com.feng.user_manager.vo.resp.GenderBarChartResp">
+        SELECT gender, COUNT(gender) AS num
+        FROM user_info
+        WHERE 1=1
+        <if test="startBirth != '' and startBirth != null">
+            and birthday &gt;= #{startBirth}
+        </if>
+        <if test="endBirth != '' and endBirth != null">
+            and birthday &lt;= #{endBirth}
+        </if>
+        <if test="startRoad != '' and startRoad != null">
+            and total_travel_road &gt;= #{startRoad}
+        </if>
+        <if test="endRoad != '' and endRoad != null">
+            and total_travel_road &lt;= #{endRoad}
+        </if>
+        <if test="startTime != '' and startTime != null">
+            and total_travel_time &gt;= #{startTime}
+        </if>
+        <if test="endTime != '' and endTime != null">
+            and total_travel_time &lt;= #{endTime}
+        </if>
+        GROUP BY gender
+        ORDER BY gender ASC
+    </select>
+<!--生日-->
+    <select id="getBirthdayPieChart" parameterType="com.feng.user_manager.vo.req.UserDataReq" resultType="com.feng.user_manager.vo.resp.BirthdayPieChartResp">
+        SELECT birthday, COUNT(birthday) AS num
+        FROM user_info
+        WHERE 1=1
+        <if test="startBirth != '' and startBirth != null">
+            and birthday &gt;= #{startBirth}
+        </if>
+        <if test="endBirth != '' and endBirth != null">
+            and birthday &lt;= #{endBirth}
+        </if>
+        <if test="startRoad != '' and startRoad != null">
+            and total_travel_road &gt;= #{startRoad}
+        </if>
+        <if test="endRoad != '' and endRoad != null">
+            and total_travel_road &lt;= #{endRoad}
+        </if>
+        <if test="startTime != '' and startTime != null">
+            and total_travel_time &gt;= #{startTime}
+        </if>
+        <if test="endTime != '' and endTime != null">
+            and total_travel_time &lt;= #{endTime}
+        </if>
+        <if test="birthInterval == '' or birthInterval == null">
+            GROUP BY birthday
+        </if>
+        ORDER BY birthday ASC
+    </select>
+
+    <select id="getBirthdayIntervalPieChart" parameterType="com.feng.user_manager.vo.req.UserDataReq" resultType="java.lang.Integer">
+        SELECT COUNT(*) AS num
+        FROM user_info
+        WHERE 1=1
+        <if test="startBirth != '' and startBirth != null">
+            and birthday &gt;= #{startBirth}
+        </if>
+        <if test="endBirth != '' and endBirth != null">
+            and birthday &lt;= #{endBirth}
+        </if>
+        <if test="startRoad != '' and startRoad != null">
+            and total_travel_road &gt;= #{startRoad}
+        </if>
+        <if test="endRoad != '' and endRoad != null">
+            and total_travel_road &lt;= #{endRoad}
+        </if>
+        <if test="startTime != '' and startTime != null">
+            and total_travel_time &gt;= #{startTime}
+        </if>
+        <if test="endTime != '' and endTime != null">
+            and total_travel_time &lt;= #{endTime}
+        </if>
+    </select>
+
+<!--    旅行时间-->
+    <select id="getTotalTravelTimeLineChart" parameterType="com.feng.user_manager.vo.req.UserDataReq" resultType="com.feng.user_manager.vo.resp.TotalTravelTimeLineChartResp">
+        SELECT total_travel_time as totalTravelTime, COUNT(total_travel_time) AS num
+        FROM user_info
+        WHERE 1=1
+        <if test="startBirth != '' and startBirth != null">
+            and birthday &gt;= #{startBirth}
+        </if>
+        <if test="endBirth != '' and endBirth != null">
+            and birthday &lt;= #{endBirth}
+        </if>
+        <if test="startRoad != '' and startRoad != null">
+            and total_travel_road &gt;= #{startRoad}
+        </if>
+        <if test="endRoad != '' and endRoad != null">
+            and total_travel_road &lt;= #{endRoad}
+        </if>
+        <if test="startTime != '' and startTime != null">
+            and total_travel_time &gt;= #{startTime}
+        </if>
+        <if test="endTime != '' and endTime != null">
+            and total_travel_time &lt;= #{endTime}
+        </if>
+        GROUP BY total_travel_time
+        ORDER BY total_travel_time ASC
+    </select>
+</mapper>
